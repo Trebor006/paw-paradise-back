@@ -2,7 +2,7 @@ name: CI Java
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master" , "feature/*" ]
   pull_request:
     branches: [ "master", "develop" ]
   workflow_dispatch:
@@ -27,6 +27,9 @@ jobs:
         with:
           java-version: ${{ matrix.java-version }}
           distribution: 'adopt'
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
