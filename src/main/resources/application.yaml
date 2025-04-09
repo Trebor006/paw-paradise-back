@@ -1,7 +1,20 @@
+# Server Configuration
+server:
+  port: 8080
+
 spring:
   application:
     name: paw-paradise-back
 
-# Server Configuration
-server:
-  port: 8080
+  datasource:
+    url: jdbc:postgresql://${BD_HOST}:${BD_PORT}/${BD_NAME}
+    username: ${BD_USER}
+    password: ${BD_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+#    url: jdbc:postgresql://${BD_HOST}:${BD_PORT}/${BD_NAME}
+#    user: ${BD_USER}
+#    password: ${BD_PASSWORD}
