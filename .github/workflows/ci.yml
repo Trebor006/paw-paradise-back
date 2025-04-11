@@ -36,7 +36,7 @@ jobs:
 
       - name: Verify JAR file exists
         run: |
-          if [ ! -f /app/app.jar ]; then
+          if [ ! -f /app/paw-paradise-back-0.0.1-SNAPSHOT.jar ]; then
             echo "JAR file not found!";
             exit 1;
           fi
