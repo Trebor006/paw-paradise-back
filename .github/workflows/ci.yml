@@ -55,7 +55,7 @@ jobs:
 #        with:
 #          push: true
 #          tags: trebor006/paw-paradise-back:latest
-      - name: Docker Login, Build, Tag and Push to GitHub Container Registry
+      - name: Docker Login, Build, Tag and Push to DockerHub Container Registry
         uses: dinushchathurya/build-tag-push-action@v1.2.1
         with:
           username: trebor006
