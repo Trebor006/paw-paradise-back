@@ -41,6 +41,9 @@ jobs:
             exit 1;
           fi
 
+      - name: Run Mutation Tests
+        run: ./gradlew pitest
+
       - name: Build Docker image
         run: docker build -t trebor006/paw-paradise-back:latest .
 
