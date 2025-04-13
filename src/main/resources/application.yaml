@@ -2,6 +2,17 @@
 server:
   port: 8080
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG
+
 spring:
   application:
     name: paw-paradise-back
@@ -15,6 +26,3 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
-#    url: jdbc:postgresql://${BD_HOST}:${BD_PORT}/${BD_NAME}
-#    user: ${BD_USER}
-#    password: ${BD_PASSWORD}
