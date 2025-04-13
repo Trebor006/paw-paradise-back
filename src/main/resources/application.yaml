@@ -21,3 +21,11 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
+
+  web:
+    cors:
+      allowed-origins: http://localhost
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+
