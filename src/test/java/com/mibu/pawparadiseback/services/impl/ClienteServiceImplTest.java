@@ -12,6 +12,9 @@ import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.mapper.ClienteMapper;
 import com.mibu.pawparadiseback.services.mapper.PersonMapper;
+import com.mibu.pawparadiseback.util.MockUtil;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -108,5 +111,28 @@ class ClienteServiceImplTest {
     assertEquals("El cliente ya está registrado.", exception.getMessage());
     verify(personRepository).findByCi("123456");
     verify(clienteRepository).findByPerson(person);
+  }
+
+  @Test
+  @DisplayName("Should return all clients")
+  void shouldReturnAllClients() {
+    // Given
+    Client client1 = MockUtil.createClient();
+    Client client2 = MockUtil.createClient();
+    ClienteResponseDto dto1 = MockUtil.createClienteResponseDto();
+    ClienteResponseDto dto2 = MockUtil.createClienteResponseDto();
+
+    List<ClienteResponseDto> expectedResponse = Arrays.asList(dto1, dto2);
+
+    when(clienteRepository.findAll()).thenReturn(Arrays.asList(client1, client2));
+    when(clienteMapper.toDtoListFromClients(anyList())).thenReturn(expectedResponse);
+
+    // When
+    List<ClienteResponseDto> result = clienteServiceImpl.getAllClientes();
+
+    // Then
+    assertEquals(expectedResponse.size(), result.size());
+    verify(clienteRepository).findAll();
+    verify(clienteMapper).toDtoListFromClients(anyList());
   }
 }

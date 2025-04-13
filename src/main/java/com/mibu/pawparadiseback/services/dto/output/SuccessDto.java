@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SuccessDto<T> {
 
-  boolean success;
+  @Builder.Default boolean success = true;
   T data;
   String message;
   HttpStatus httpStatus;

@@ -8,6 +8,21 @@ servers:
     description: "Local server"
 paths:
   /api/clientes:
+    get:
+      summary: "GET api/clientes"
+      operationId: "getAllClientes"
+      responses:
+        "200":
+          description: "List of all clients"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ClienteResponseDto"
+              examples:
+                example1:
+                  $ref: "#/components/examples/ClientesListExample"
     post:
       summary: "POST api/clientes"
       operationId: "createCliente"
@@ -16,6 +31,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ClienteRequestDto"
+            example:
+              ClienteRequestExample:
+                $ref: "#/components/examples/ClienteRequestExample"
         required: true
       responses:
         "200":
@@ -24,6 +42,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClienteResponseDto"
+              examples:
+                ClienteResponseExample:
+                  $ref: "#/components/examples/ClienteResponseExample"
   /api/clientes/{id}:
     get:
       summary: "GET api/clientes/{id}"
@@ -104,3 +125,43 @@ components:
           type: "string"
         personCi:
           type: "string"
+  examples:
+    ClientesListExample:
+      summary: "Example list of clients"
+      value:
+        - id: 1
+          createdAt: "2025-04-13T12:00:00Z"
+          personId: 101
+          clientName: "John Doe"
+          clientEmail: "john.doe@example.com"
+          personCi: "123456"
+        - id: 2
+          createdAt: "2025-04-13T12:00:00Z"
+          personId: 102
+          clientName: "Jane Smith"
+          clientEmail: "jane.smith@example.com"
+          personCi: "654321"
+    ClienteRequestExample:
+      summary: "Example client request"
+      value:
+        ci: "123456"
+        name: "John"
+        lastname: "Doe"
+        email: "john.doe@example.com"
+        phone: "123-456-7890"
+        image: "image_url"
+        gender: "male"
+        birthdate: "1990-01-01T00:00:00Z"
+        type: "regular"
+        address: "123 Main St"
+        country: "USA"
+        role: "client"
+    ClienteResponseExample:
+      summary: "Example client response"
+      value:
+        id: 1
+        createdAt: "2025-04-13T12:00:00Z"
+        personId: 101
+        clientName: "John Doe"
+        clientEmail: "john.doe@example.com"
+        personCi: "123456"

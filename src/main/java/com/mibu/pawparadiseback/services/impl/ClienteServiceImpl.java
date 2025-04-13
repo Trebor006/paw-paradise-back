@@ -10,6 +10,7 @@ import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.mapper.ClienteMapper;
 import com.mibu.pawparadiseback.services.mapper.PersonMapper;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,5 +54,11 @@ public class ClienteServiceImpl implements ClienteService {
       person = personRepository.save(person);
     }
     return person;
+  }
+
+  @Override
+  public List<ClienteResponseDto> getAllClientes() {
+    List<Client> clients = clienteRepository.findAll();
+    return clienteMapper.toDtoListFromClients(clients);
   }
 }

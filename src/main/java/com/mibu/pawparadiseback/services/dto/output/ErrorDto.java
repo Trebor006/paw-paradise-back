@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ErrorDto {
 
-  private boolean success;
-  private String message;
-  private String details;
-  private HttpStatus httpStatus;
+  @Builder.Default boolean success = false;
+  String message;
+  String details;
+  HttpStatus httpStatus;
 }
