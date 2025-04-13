@@ -4,6 +4,7 @@ import com.mibu.pawparadiseback.services.ClienteService;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.dto.output.SuccessDto;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,14 @@ public class ClienteController {
     ClienteResponseDto response = clienteService.createCliente(clienteRequestDto);
     SuccessDto successDto =
         SuccessDto.builder().message("Cliente created successfully").data(response).build();
+    return ResponseEntity.ok(successDto);
+  }
+
+  @GetMapping
+  public ResponseEntity<SuccessDto> getAllClientes() {
+    List<ClienteResponseDto> response = clienteService.getAllClientes();
+    SuccessDto successDto =
+        SuccessDto.builder().message("Clients retrieved successfully").data(response).build();
     return ResponseEntity.ok(successDto);
   }
 }
