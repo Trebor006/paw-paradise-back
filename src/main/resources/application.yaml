@@ -1,0 +1,28 @@
+# Server Configuration
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+logging:
+  level:
+    root: INFO
+    org.springframework: DEBUG
+
+spring:
+  application:
+    name: paw-paradise-back
+
+  datasource:
+    url: jdbc:postgresql://${BD_HOST}:${BD_PORT}/${BD_NAME}
+    username: ${BD_USER}
+    password: ${BD_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml

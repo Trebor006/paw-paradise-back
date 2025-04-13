@@ -1,0 +1,56 @@
+name: CI Java
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master", "develop" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        java-version: [ '17' ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'adopt'
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Ensure Gradle build generates JAR
+        run: ./gradlew build
+
+      - name: Verify JAR file exists
+        run: |
+          if [ ! -f build/libs/paw-paradise-back-0.0.1-SNAPSHOT.jar ]; then
+            echo "JAR file not found!";
+            exit 1;
+          fi
+
+      - name: Build Docker image
+        run: docker build -t trebor006/paw-paradise-back:latest .
+
+      - name: Docker Login, Build, Tag and Push to DockerHub Container Registry
+        uses: dinushchathurya/build-tag-push-action@v1.2.1
+        with:
+          username: trebor006
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          context: .
+          file: Dockerfile
+          repoOwner: trebor006
+          repository: paw-paradise-back
+          tag: latest
