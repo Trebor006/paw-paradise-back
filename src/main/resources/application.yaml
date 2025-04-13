@@ -24,7 +24,7 @@ spring:
 
   web:
     cors:
-      allowed-origins: http://localhost
+      allowed-origins: http://localhost:8080
       allowed-methods: "*"
       allowed-headers: "*"
       allow-credentials: true
