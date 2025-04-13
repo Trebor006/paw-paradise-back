@@ -1,0 +1,112 @@
+package com.mibu.pawparadiseback.services.impl;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import com.mibu.pawparadiseback.domain.Client;
+import com.mibu.pawparadiseback.domain.Person;
+import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
+import com.mibu.pawparadiseback.repository.ClienteRepository;
+import com.mibu.pawparadiseback.repository.PersonRepository;
+import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
+import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
+import com.mibu.pawparadiseback.services.mapper.ClienteMapper;
+import com.mibu.pawparadiseback.services.mapper.PersonMapper;
+import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+class ClienteServiceImplTest {
+
+  @Mock private PersonRepository personRepository;
+  @Mock private ClienteRepository clienteRepository;
+  @Mock private PersonMapper personMapper;
+  @Mock private ClienteMapper clienteMapper;
+
+  @InjectMocks private ClienteServiceImpl clienteServiceImpl;
+
+  @BeforeEach
+  void setUp() {
+    MockitoAnnotations.openMocks(this);
+  }
+
+  @Test
+  @DisplayName("Should create a new client when person does not exist")
+  void shouldCreateClientWhenPersonDoesNotExist() {
+    // Given
+    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
+    Person person = mock(Person.class);
+    Client client = mock(Client.class);
+    ClienteResponseDto clienteResponseDto = mock(ClienteResponseDto.class);
+
+    when(clienteRequestDto.getCi()).thenReturn("123456");
+    when(personRepository.findByCi("123456")).thenReturn(Optional.empty());
+    when(personMapper.toEntity(clienteRequestDto)).thenReturn(person);
+    when(personRepository.save(person)).thenReturn(person);
+    when(clienteMapper.toEntity(clienteRequestDto)).thenReturn(client);
+    when(clienteRepository.save(client)).thenReturn(client);
+    when(clienteMapper.toDto(client)).thenReturn(clienteResponseDto);
+
+    // When
+    ClienteResponseDto result = clienteServiceImpl.createCliente(clienteRequestDto);
+
+    // Then
+    assertEquals(clienteResponseDto, result);
+    verify(personRepository).findByCi("123456");
+    verify(personRepository).save(person);
+    verify(clienteRepository).save(client);
+    verify(clienteMapper).toDto(client);
+  }
+
+  @Test
+  @DisplayName("Should create a new client when person already exists")
+  void shouldCreateClientWhenPersonExists() {
+    // Given
+    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
+    Person person = mock(Person.class);
+    Client client = mock(Client.class);
+    ClienteResponseDto clienteResponseDto = mock(ClienteResponseDto.class);
+
+    when(clienteRequestDto.getCi()).thenReturn("123456");
+    when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
+    when(clienteMapper.toEntity(clienteRequestDto)).thenReturn(client);
+    when(clienteRepository.save(client)).thenReturn(client);
+    when(clienteMapper.toDto(client)).thenReturn(clienteResponseDto);
+
+    // When
+    ClienteResponseDto result = clienteServiceImpl.createCliente(clienteRequestDto);
+
+    // Then
+    assertEquals(clienteResponseDto, result);
+    verify(personRepository).findByCi("123456");
+    verify(clienteRepository).save(client);
+    verify(clienteMapper).toDto(client);
+  }
+
+  @Test
+  @DisplayName("Should throw exception when client already exists")
+  void shouldThrowExceptionWhenClientAlreadyExists() {
+    // Given
+    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
+    Person person = mock(Person.class);
+    Client client = mock(Client.class);
+
+    when(clienteRequestDto.getCi()).thenReturn("123456");
+    when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
+
+    // When / Then
+    CustomerRegisteredException exception =
+        assertThrows(
+            CustomerRegisteredException.class,
+            () -> clienteServiceImpl.createCliente(clienteRequestDto));
+
+    assertEquals("El cliente ya está registrado.", exception.getMessage());
+    verify(personRepository).findByCi("123456");
+    verify(clienteRepository).findByPerson(person);
+  }
+}
