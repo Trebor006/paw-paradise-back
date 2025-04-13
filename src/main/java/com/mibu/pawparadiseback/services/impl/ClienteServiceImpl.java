@@ -36,13 +36,15 @@ public class ClienteServiceImpl implements ClienteService {
     Person person = getPerson(clienteRequestDto, existingPerson);
 
     Optional<Client> existingClient = clienteRepository.findByPerson(person);
+    Client client;
     if (existingClient.isPresent()) {
-      throw new CustomerRegisteredException(EL_CLIENTE_YA_ESTA_REGISTRADO);
+      client = existingClient.get();
+    } else {
+      client = clienteMapper.toEntity(clienteRequestDto);
+      client.setPerson(person);
+      client.setStatus(StatusEnum.ACTIVE);
+      client = clienteRepository.save(client);
     }
-
-    Client client = clienteMapper.toEntity(clienteRequestDto);
-    client.setPerson(person);
-    client = clienteRepository.save(client);
 
     return clienteMapper.toDto(client);
   }
