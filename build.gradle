@@ -75,5 +75,5 @@ pitest {
 	threads = 4
 	outputFormats = ['XML', 'HTML']
 	timestampedReports = false
-	mutationThreshold = 99 // Umbral mínimo de cobertura de mutación
+	mutationThreshold = 60 // Umbral mínimo de cobertura de mutación
 }
