@@ -2,6 +2,8 @@ package com.mibu.pawparadiseback.services.impl;
 
 import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
+import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
 import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
@@ -58,7 +60,17 @@ public class ClienteServiceImpl implements ClienteService {
 
   @Override
   public List<ClienteResponseDto> getAllClientes() {
-    List<Client> clients = clienteRepository.findAll();
+    List<Client> clients = clienteRepository.findAllByStatus(StatusEnum.ACTIVE);
     return clienteMapper.toDtoListFromClients(clients);
+  }
+
+  @Override
+  public void deleteCliente(Integer id) {
+    Client client =
+        clienteRepository
+            .findById(id)
+            .orElseThrow(() -> new CustomerNotFoundException("Client not found"));
+    client.setStatus(StatusEnum.INACTIVE);
+    clienteRepository.save(client);
   }
 }

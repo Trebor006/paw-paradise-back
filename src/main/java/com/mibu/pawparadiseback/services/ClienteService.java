@@ -11,4 +11,6 @@ public interface ClienteService {
   ClienteResponseDto createCliente(ClienteRequestDto clienteRequestDto);
 
   List<ClienteResponseDto> getAllClientes();
+
+  void deleteCliente(Integer id);
 }
