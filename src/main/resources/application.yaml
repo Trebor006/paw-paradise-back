@@ -13,17 +13,6 @@ logging:
     root: INFO
     org.springframework: DEBUG
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
-
-logging:
-  level:
-    root: INFO
-    org.springframework: DEBUG
-
 spring:
   application:
     name: paw-paradise-back
