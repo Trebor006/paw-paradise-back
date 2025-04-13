@@ -1,5 +1,6 @@
 package com.mibu.pawparadiseback.domain;
 
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Client")
+@Table(name = "client")
 public class Client {
 
   @Id
@@ -26,4 +27,8 @@ public class Client {
   @OneToOne
   @JoinColumn(name = "person_id", nullable = false)
   private Person person;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
+  StatusEnum status;
 }

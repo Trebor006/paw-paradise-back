@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 
 import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
+import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
 import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
@@ -124,7 +126,7 @@ class ClienteServiceImplTest {
 
     List<ClienteResponseDto> expectedResponse = Arrays.asList(dto1, dto2);
 
-    when(clienteRepository.findAll()).thenReturn(Arrays.asList(client1, client2));
+    when(clienteRepository.findAllByStatus(any())).thenReturn(Arrays.asList(client1, client2));
     when(clienteMapper.toDtoListFromClients(anyList())).thenReturn(expectedResponse);
 
     // When
@@ -132,7 +134,42 @@ class ClienteServiceImplTest {
 
     // Then
     assertEquals(expectedResponse.size(), result.size());
-    verify(clienteRepository).findAll();
+    verify(clienteRepository).findAllByStatus(any());
     verify(clienteMapper).toDtoListFromClients(anyList());
+  }
+
+  @Test
+  @DisplayName("Should set client status to INACTIVE when deleting an existing client")
+  void givenExistingClientIdShouldSetStatusToInactive() {
+    // Given
+    Integer clientId = 1;
+    Client client = mock(Client.class);
+
+    when(clienteRepository.findById(clientId)).thenReturn(Optional.of(client));
+    when(clienteRepository.save(client)).thenReturn(client);
+
+    // When
+    clienteServiceImpl.deleteCliente(clientId);
+
+    // Then
+    verify(clienteRepository).findById(clientId);
+    verify(client).setStatus(StatusEnum.INACTIVE);
+    verify(clienteRepository).save(client);
+  }
+
+  @Test
+  @DisplayName("Should throw exception when deleting a non-existent client")
+  void givenNonExistentClientIdThenThrowException() {
+    // Given
+    Integer clientId = 1;
+    when(clienteRepository.findById(clientId)).thenReturn(Optional.empty());
+
+    // When / Then
+    Exception exception =
+        assertThrows(
+            CustomerNotFoundException.class, () -> clienteServiceImpl.deleteCliente(clientId));
+
+    assertEquals("Client not found", exception.getMessage());
+    verify(clienteRepository).findById(clientId);
   }
 }

@@ -32,4 +32,11 @@ public class ClienteController {
         SuccessDto.builder().message("Clients retrieved successfully").data(response).build();
     return ResponseEntity.ok(successDto);
   }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<SuccessDto> deleteCliente(@PathVariable Integer id) {
+    clienteService.deleteCliente(id);
+    SuccessDto successDto = SuccessDto.builder().message("Cliente deleted successfully").build();
+    return ResponseEntity.ok(successDto);
+  }
 }
