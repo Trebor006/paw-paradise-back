@@ -10,10 +10,16 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ClienteResponseDto {
-  Integer id;
-  LocalDateTime createdAt;
-  Integer personId;
-  String clientName;
-  String clientEmail;
-  String personCi;
+  Long id;
+  String ci;
+  String name;
+  String lastname;
+  String email;
+  String phone;
+  String image;
+  String gender;
+  LocalDateTime birthdate;
+  String type;
+  String address;
+  String country;
 }

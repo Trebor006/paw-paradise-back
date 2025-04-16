@@ -24,7 +24,7 @@ public class ClienteController {
       @RequestBody ClienteRequestDto clienteRequestDto) {
     ClienteResponseDto response = clienteService.createCliente(clienteRequestDto);
     SuccessDto successDto =
-        SuccessDto.builder().message("Cliente created successfully").data(response).build();
+        SuccessDto.<ClienteResponseDto>builder().message("Cliente created successfully").data(response).build();
     return ResponseEntity.ok(successDto);
   }
 

@@ -24,9 +24,9 @@ public class MockUtil {
 
   public static ClienteResponseDto createClienteResponseDto() {
     ClienteResponseDto dto = new ClienteResponseDto();
-    dto.setId(1);
-    dto.setClientName("John");
-    //    dto.setLastName("Doe");
+    dto.setId(1L); // Use Long instead of int
+    dto.setName("John"); // Updated property name
+    dto.setEmail("john.doe@example.com"); // Example email
     return dto;
   }
 

@@ -22,5 +22,4 @@ public class ClienteRequestDto {
   String type;
   String address;
   String country;
-  String role;
 }
