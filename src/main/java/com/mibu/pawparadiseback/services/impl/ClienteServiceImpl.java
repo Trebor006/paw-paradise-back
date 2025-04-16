@@ -4,7 +4,6 @@ import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
 import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
-import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.services.ClienteService;
@@ -46,7 +45,7 @@ public class ClienteServiceImpl implements ClienteService {
       client = clienteRepository.save(client);
     }
 
-    return clienteMapper.toDto(client);
+    return clienteMapper.mapToResponseDto(client);
   }
 
   private Person getPerson(ClienteRequestDto clienteRequestDto, Optional<Person> existingPerson) {
@@ -67,12 +66,37 @@ public class ClienteServiceImpl implements ClienteService {
   }
 
   @Override
-  public void deleteCliente(Integer id) {
+  public void deleteCliente(String ci) {
+    Person person =
+        personRepository
+            .findByCi(ci)
+            .orElseThrow(
+                () -> new CustomerNotFoundException("Person with CI " + ci + " not found"));
     Client client =
         clienteRepository
-            .findById(id)
-            .orElseThrow(() -> new CustomerNotFoundException("Client not found"));
+            .findByPerson(person)
+            .orElseThrow(
+                () ->
+                    new CustomerNotFoundException(
+                        "Client associated with CI " + ci + " not found"));
     client.setStatus(StatusEnum.INACTIVE);
     clienteRepository.save(client);
+  }
+
+  @Override
+  public ClienteResponseDto getClienteByCi(String ci) {
+    Person person =
+        personRepository
+            .findByCi(ci)
+            .orElseThrow(
+                () -> new CustomerNotFoundException("Person with CI " + ci + " not found"));
+    Client client =
+        clienteRepository
+            .findByPerson(person)
+            .orElseThrow(
+                () ->
+                    new CustomerNotFoundException(
+                        "Client associated with CI " + ci + " not found"));
+    return clienteMapper.mapToResponseDto(client);
   }
 }

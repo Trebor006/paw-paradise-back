@@ -12,5 +12,7 @@ public interface ClienteService {
 
   List<ClienteResponseDto> getAllClientes();
 
-  void deleteCliente(Integer id);
+  void deleteCliente(String ci);
+
+  ClienteResponseDto getClienteByCi(String ci);
 }

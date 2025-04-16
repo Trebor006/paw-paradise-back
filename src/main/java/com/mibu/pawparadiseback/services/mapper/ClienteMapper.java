@@ -16,7 +16,7 @@ public interface ClienteMapper {
   @Mapping(source = "person.ci", target = "personCi")
   @Mapping(source = "person.name", target = "clientName")
   @Mapping(source = "person.email", target = "clientEmail")
-  ClienteResponseDto toDto(Client entity);
+  ClienteResponseDto mapToResponseDto(Client entity);
 
   List<ClienteResponseDto> toDtoListFromClients(List<Client> clients);
 }
