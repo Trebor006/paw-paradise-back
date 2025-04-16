@@ -12,5 +12,5 @@ public interface MascotaMapper {
   @Mapping(target = "id", ignore = true)
   Pet toEntity(MascotaRequestDto dto);
 
-  MascotaResponseDto toDto(Pet pet);
+  MascotaResponseDto toResponseDto(Pet pet);
 }

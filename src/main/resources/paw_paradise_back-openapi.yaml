@@ -76,6 +76,48 @@ paths:
       responses:
         "204":
           description: "No Content"
+  /api/mascotas:
+    post:
+      summary: "POST api/mascotas"
+      operationId: "registrarMascota"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MascotaRequestDto"
+            example:
+              MascotaRequestExample:
+                $ref: "#/components/examples/MascotaRequestExample"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MascotaResponseDto"
+              examples:
+                MascotaResponseExample:
+                  $ref: "#/components/examples/MascotaResponseExample"
+  /api/mascotas/cliente/{ci}:
+    get:
+      summary: "GET api/mascotas/cliente/{ci}"
+      operationId: "listarMascotasPorCliente"
+      parameters:
+        - name: "ci"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "List of pets for the client"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MascotaResponseDto"
 components:
   schemas:
     ClienteRequestDto:
@@ -125,6 +167,35 @@ components:
           type: "string"
         personCi:
           type: "string"
+    MascotaRequestDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        species:
+          type: "string"
+        breed:
+          type: "string"
+        age:
+          type: "integer"
+        ownerCi:
+          type: "string"
+    MascotaResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+        species:
+          type: "string"
+        breed:
+          type: "string"
+        age:
+          type: "integer"
+        ownerCi:
+          type: "string"
   examples:
     ClientesListExample:
       summary: "Example list of clients"
@@ -165,3 +236,20 @@ components:
         clientName: "John Doe"
         clientEmail: "john.doe@example.com"
         personCi: "123456"
+    MascotaRequestExample:
+      summary: "Example pet request"
+      value:
+        name: "Buddy"
+        species: "Dog"
+        breed: "Golden Retriever"
+        age: 3
+        ownerCi: "123456"
+    MascotaResponseExample:
+      summary: "Example pet response"
+      value:
+        id: 1
+        name: "Buddy"
+        species: "Dog"
+        breed: "Golden Retriever"
+        age: 3
+        ownerCi: "123456"

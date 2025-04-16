@@ -15,6 +15,7 @@ import com.mibu.pawparadiseback.services.exceptions.ClientNotFoundException;
 import com.mibu.pawparadiseback.services.exceptions.PersonNotFoundException;
 import com.mibu.pawparadiseback.services.mapper.MascotaMapper;
 import com.mibu.pawparadiseback.util.MockUtil;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +52,7 @@ class MascotaServiceImplTest {
     when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
     when(mascotaMapper.toEntity(mascotaRequestDto)).thenReturn(pet);
     when(petRepository.save(pet)).thenReturn(pet);
-    when(mascotaMapper.toDto(pet)).thenReturn(mascotaResponseDto);
+    when(mascotaMapper.toResponseDto(pet)).thenReturn(mascotaResponseDto);
 
     // When
     MascotaResponseDto result = mascotaServiceImpl.registrarMascota(mascotaRequestDto);
@@ -61,7 +62,7 @@ class MascotaServiceImplTest {
     verify(personRepository).findByCi(mascotaRequestDto.getCi());
     verify(clienteRepository).findByPerson(person);
     verify(petRepository).save(pet);
-    verify(mascotaMapper).toDto(pet);
+    verify(mascotaMapper).toResponseDto(pet);
   }
 
   @Test
@@ -107,5 +108,33 @@ class MascotaServiceImplTest {
     verify(personRepository).findByCi(mascotaRequestDto.getCi());
     verify(clienteRepository).findByPerson(person);
     verifyNoInteractions(petRepository, mascotaMapper);
+  }
+
+  @Test
+  @DisplayName("Should return a list of pets for a given CI")
+  void givenCiObtenerMascotasPorClienteShouldReturnListOfPets() {
+    // given
+    String ci = "12345678";
+    Person person = new Person();
+    person.setCi(ci);
+    Client client = new Client();
+    client.setId(1L);
+    client.setPerson(person);
+
+    List<Pet> pets = MockUtil.getPets(client);
+
+    when(personRepository.findByCi(ci)).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
+    when(petRepository.findByClientId(anyLong())).thenReturn(pets);
+
+    // when
+    List<MascotaResponseDto> result = mascotaServiceImpl.obtenerMascotasPorCliente(ci);
+
+    // then
+    assertNotNull(result);
+    assertEquals(pets.size(), result.size());
+    verify(personRepository, times(1)).findByCi(ci);
+    verify(clienteRepository, times(1)).findByPerson(person);
+    verify(petRepository, times(1)).findByClientId(client.getId());
   }
 }

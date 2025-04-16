@@ -3,10 +3,13 @@ package com.mibu.pawparadiseback.util;
 import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
 import com.mibu.pawparadiseback.domain.Pet;
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.input.MascotaRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.dto.output.MascotaResponseDto;
+import java.time.LocalDate;
+import java.util.List;
 
 public class MockUtil {
 
@@ -53,5 +56,29 @@ public class MockUtil {
 
   public static MascotaResponseDto createMascotaResponseDto() {
     return MascotaResponseDto.builder().build();
+  }
+
+  public static List<Pet> getPets(Client client) {
+    return List.of(
+        new Pet(
+            1L,
+            "Buddy",
+            "Dog",
+            "Male",
+            "Golden Retriever",
+            LocalDate.of(2020, 1, 1),
+            "image1.jpg",
+            client.getId(),
+            StatusEnum.ACTIVE),
+        new Pet(
+            2L,
+            "Mittens",
+            "Cat",
+            "Female",
+            "Siamese",
+            LocalDate.of(2019, 5, 15),
+            "image2.jpg",
+            client.getId(),
+            StatusEnum.ACTIVE));
   }
 }

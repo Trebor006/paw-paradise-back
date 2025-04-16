@@ -27,6 +27,9 @@ public class Pet {
   private String gender;
 
   @Column(nullable = false)
+  private String type;
+
+  @Column(nullable = false)
   private String breed;
 
   @Column(nullable = false)
