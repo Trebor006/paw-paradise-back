@@ -6,10 +6,12 @@ import static org.mockito.Mockito.*;
 import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
 import com.mibu.pawparadiseback.domain.Pet;
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.repository.PetRepository;
 import com.mibu.pawparadiseback.services.dto.input.MascotaRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateMascotaRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.MascotaResponseDto;
 import com.mibu.pawparadiseback.services.exceptions.ClientNotFoundException;
 import com.mibu.pawparadiseback.services.exceptions.PersonNotFoundException;
@@ -136,5 +138,32 @@ class MascotaServiceImplTest {
     verify(personRepository, times(1)).findByCi(ci);
     verify(clienteRepository, times(1)).findByPerson(person);
     verify(petRepository, times(1)).findByClientId(client.getId());
+  }
+
+  @Test
+  @DisplayName("Should update a pet when client and pet exist and pet is active")
+  void shouldUpdatePetWhenClientAndPetExistAndPetIsActive() {
+    // Given
+    String ci = "123456";
+    Long mascotaId = 1L;
+    UpdateMascotaRequestDto updateMascotaRequestDto = MockUtil.createUpdateMascotaRequestDto();
+    Person person = MockUtil.createPerson();
+    Client client = MockUtil.createClient();
+    Pet pet = MockUtil.createPet();
+    pet.setStatus(StatusEnum.ACTIVE);
+    MascotaResponseDto mascotaResponseDto = MockUtil.createMascotaResponseDto();
+
+    when(personRepository.findByCi(ci)).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
+    when(petRepository.findByIdAndClientId(mascotaId, client.getId())).thenReturn(Optional.of(pet));
+    when(petRepository.save(pet)).thenReturn(pet);
+    when(mascotaMapper.toResponseDto(pet)).thenReturn(mascotaResponseDto);
+
+    // When
+    MascotaResponseDto result = mascotaServiceImpl.actualizarMascota(ci, mascotaId, updateMascotaRequestDto);
+
+    // Then
+    assertEquals(mascotaResponseDto, result);
+    verify(petRepository).save(pet);
   }
 }

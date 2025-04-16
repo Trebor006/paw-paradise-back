@@ -148,6 +148,43 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClienteResponseDto"
+  /api/mascotas/{ci}/{mascotaId}:
+    put:
+      summary: "Update a pet by client CI and pet ID"
+      operationId: "updatePet"
+      parameters:
+        - name: "ci"
+          in: "path"
+          required: true
+          description: "Client CI"
+          schema:
+            type: "string"
+        - name: "mascotaId"
+          in: "path"
+          required: true
+          description: "Pet ID"
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMascotaRequestDto"
+      responses:
+        "200":
+          description: "Pet updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MascotaResponseDto"
+        "400":
+          description: "Invalid input"
+        "404":
+          description: "Client or pet not found"
+        "500":
+          description: "Internal server error"
 components:
   schemas:
     ClienteRequestDto:

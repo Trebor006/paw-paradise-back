@@ -2,6 +2,7 @@ package com.mibu.pawparadiseback.controller;
 
 import com.mibu.pawparadiseback.services.MascotaService;
 import com.mibu.pawparadiseback.services.dto.input.MascotaRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateMascotaRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.MascotaResponseDto;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,15 @@ public class MascotaController {
     log.info("Listing pets for client with CI: {}", ci);
     List<MascotaResponseDto> mascotas = mascotaService.obtenerMascotasPorCliente(ci);
     return new ResponseEntity<>(mascotas, HttpStatus.OK);
+  }
+
+  @PutMapping("/cliente/{ci}/{mascotaId}")
+  public ResponseEntity<MascotaResponseDto> actualizarMascota(
+      @PathVariable("ci") String ci,
+      @PathVariable("mascotaId") Long mascotaId,
+      @RequestBody UpdateMascotaRequestDto updateMascotaRequestDto) {
+    log.info("Updating pet with ID {} for client with CI {}", mascotaId, ci);
+    MascotaResponseDto response = mascotaService.actualizarMascota(ci, mascotaId, updateMascotaRequestDto);
+    return new ResponseEntity<>(response, HttpStatus.OK);
   }
 }

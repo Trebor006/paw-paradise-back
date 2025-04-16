@@ -9,15 +9,15 @@ import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.repository.PetRepository;
 import com.mibu.pawparadiseback.services.MascotaService;
 import com.mibu.pawparadiseback.services.dto.input.MascotaRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateMascotaRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.MascotaResponseDto;
-import com.mibu.pawparadiseback.services.mapper.MascotaMapper;
 import com.mibu.pawparadiseback.services.exceptions.ClientNotFoundException;
 import com.mibu.pawparadiseback.services.exceptions.PersonNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
+import com.mibu.pawparadiseback.services.mapper.MascotaMapper;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -60,14 +60,86 @@ public class MascotaServiceImpl implements MascotaService {
 
   @Override
   public List<MascotaResponseDto> obtenerMascotasPorCliente(String ci) {
-    Person person = personRepository.findByCi(ci)
-        .orElseThrow(() -> new PersonNotFoundException("El cliente con CI " + ci + " no está registrado."));
+    Person person =
+        personRepository
+            .findByCi(ci)
+            .orElseThrow(
+                () ->
+                    new PersonNotFoundException(
+                        "El cliente con CI " + ci + " no está registrado."));
 
-    Client client = clienteRepository.findByPerson(person)
-        .orElseThrow(() -> new ClientNotFoundException("El cliente con CI " + ci + " no está registrado."));
+    Client client =
+        clienteRepository
+            .findByPerson(person)
+            .orElseThrow(
+                () ->
+                    new ClientNotFoundException(
+                        "El cliente con CI " + ci + " no está registrado."));
 
     return petRepository.findByClientId(client.getId()).stream()
         .map(mascotaMapper::toResponseDto)
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public MascotaResponseDto actualizarMascota(
+      String ci, Long mascotaId, UpdateMascotaRequestDto updateMascotaRequestDto) {
+    Person person =
+        personRepository
+            .findByCi(ci)
+            .orElseThrow(
+                () ->
+                    new PersonNotFoundException(
+                        "El cliente con CI " + ci + " no está registrado."));
+
+    Client client =
+        clienteRepository
+            .findByPerson(person)
+            .orElseThrow(
+                () ->
+                    new ClientNotFoundException(
+                        "El cliente con CI " + ci + " no está registrado."));
+
+    Pet pet =
+        petRepository
+            .findByIdAndClientId(mascotaId, client.getId())
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "La mascota con ID "
+                            + mascotaId
+                            + " no pertenece al cliente con CI "
+                            + ci
+                            + "."));
+
+    if (pet.getStatus() != StatusEnum.ACTIVE) {
+      throw new IllegalStateException("Solo se pueden actualizar mascotas con estado ACTIVO.");
+    }
+
+    // Actualizar los campos de la mascota
+    if (updateMascotaRequestDto.getName() != null) {
+      pet.setName(updateMascotaRequestDto.getName());
+    }
+    if (updateMascotaRequestDto.getType() != null) {
+      pet.setType(updateMascotaRequestDto.getType());
+    }
+    if (updateMascotaRequestDto.getGender() != null) {
+      pet.setGender(updateMascotaRequestDto.getGender());
+    }
+    if (updateMascotaRequestDto.getBreed() != null) {
+      pet.setBreed(updateMascotaRequestDto.getBreed());
+    }
+    if (updateMascotaRequestDto.getBirthdate() != null) {
+      pet.setBirthdate(updateMascotaRequestDto.getBirthdate());
+    }
+    if (updateMascotaRequestDto.getImage() != null) {
+      pet.setImage(updateMascotaRequestDto.getImage());
+    }
+
+    // Guardar los cambios
+    pet = petRepository.save(pet);
+
+    // Retornar la respuesta
+    return mascotaMapper.toResponseDto(pet);
   }
 }

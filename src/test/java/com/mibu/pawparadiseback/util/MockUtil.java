@@ -6,6 +6,7 @@ import com.mibu.pawparadiseback.domain.Pet;
 import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.input.MascotaRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateMascotaRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.dto.output.MascotaResponseDto;
 import java.time.LocalDate;
@@ -92,5 +93,9 @@ public class MockUtil {
 
   public static ClienteResponseDto createMockClienteResponseDto(Client client) {
     return ClienteResponseDto.builder().build();
+  }
+
+  public static UpdateMascotaRequestDto createUpdateMascotaRequestDto() {
+    return UpdateMascotaRequestDto.builder().build();
   }
 }
