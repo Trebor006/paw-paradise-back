@@ -81,4 +81,16 @@ public class MockUtil {
             client.getId(),
             StatusEnum.ACTIVE));
   }
+
+  public static Person createMockPerson(String ci) {
+    return Person.builder().ci(ci).build();
+  }
+
+  public static Client createMockClient(Person person) {
+    return Client.builder().person(person).build();
+  }
+
+  public static ClienteResponseDto createMockClienteResponseDto(Client client) {
+    return ClienteResponseDto.builder().build();
+  }
 }

@@ -35,9 +35,17 @@ public class ClienteController {
     return ResponseEntity.ok(successDto);
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<SuccessDto> deleteCliente(@PathVariable Integer id) {
-    clienteService.deleteCliente(id);
+  @GetMapping("/getBy/{ci}")
+  public ResponseEntity<SuccessDto> getClienteByCi(@PathVariable("ci") String ci) {
+    ClienteResponseDto response = clienteService.getClienteByCi(ci);
+    SuccessDto successDto =
+        SuccessDto.builder().message("Client retrieved successfully").data(response).build();
+    return ResponseEntity.ok(successDto);
+  }
+
+  @DeleteMapping("/{ci}")
+  public ResponseEntity<SuccessDto> deleteCliente(@PathVariable("ci") String ci) {
+    clienteService.deleteCliente(ci);
     SuccessDto successDto = SuccessDto.builder().message("Cliente deleted successfully").build();
     return ResponseEntity.ok(successDto);
   }

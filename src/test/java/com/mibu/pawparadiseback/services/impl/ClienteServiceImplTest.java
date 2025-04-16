@@ -7,7 +7,6 @@ import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
 import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
-import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
@@ -54,7 +53,7 @@ class ClienteServiceImplTest {
     when(personRepository.save(person)).thenReturn(person);
     when(clienteMapper.toEntity(clienteRequestDto)).thenReturn(client);
     when(clienteRepository.save(client)).thenReturn(client);
-    when(clienteMapper.toDto(client)).thenReturn(clienteResponseDto);
+    when(clienteMapper.mapToResponseDto(client)).thenReturn(clienteResponseDto);
 
     // When
     ClienteResponseDto result = clienteServiceImpl.createCliente(clienteRequestDto);
@@ -64,7 +63,7 @@ class ClienteServiceImplTest {
     verify(personRepository).findByCi("123456");
     verify(personRepository).save(person);
     verify(clienteRepository).save(client);
-    verify(clienteMapper).toDto(client);
+    verify(clienteMapper).mapToResponseDto(client);
   }
 
   @Test
@@ -80,7 +79,7 @@ class ClienteServiceImplTest {
     when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
     when(clienteMapper.toEntity(clienteRequestDto)).thenReturn(client);
     when(clienteRepository.save(client)).thenReturn(client);
-    when(clienteMapper.toDto(client)).thenReturn(clienteResponseDto);
+    when(clienteMapper.mapToResponseDto(client)).thenReturn(clienteResponseDto);
 
     // When
     ClienteResponseDto result = clienteServiceImpl.createCliente(clienteRequestDto);
@@ -89,31 +88,31 @@ class ClienteServiceImplTest {
     assertEquals(clienteResponseDto, result);
     verify(personRepository).findByCi("123456");
     verify(clienteRepository).save(client);
-    verify(clienteMapper).toDto(client);
+    verify(clienteMapper).mapToResponseDto(client);
   }
 
-//  @Test
-//  @DisplayName("Should throw exception when client already exists")
-//  void shouldThrowExceptionWhenClientAlreadyExists() {
-//    // Given
-//    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
-//    Person person = mock(Person.class);
-//    Client client = mock(Client.class);
-//
-//    when(clienteRequestDto.getCi()).thenReturn("123456");
-//    when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
-//    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
-//
-//    // When / Then
-//    CustomerRegisteredException exception =
-//        assertThrows(
-//            CustomerRegisteredException.class,
-//            () -> clienteServiceImpl.createCliente(clienteRequestDto));
-//
-//    assertEquals("El cliente ya está registrado.", exception.getMessage());
-//    verify(personRepository).findByCi("123456");
-//    verify(clienteRepository).findByPerson(person);
-//  }
+  //  @Test
+  //  @DisplayName("Should throw exception when client already exists")
+  //  void shouldThrowExceptionWhenClientAlreadyExists() {
+  //    // Given
+  //    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
+  //    Person person = mock(Person.class);
+  //    Client client = mock(Client.class);
+  //
+  //    when(clienteRequestDto.getCi()).thenReturn("123456");
+  //    when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
+  //    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
+  //
+  //    // When / Then
+  //    CustomerRegisteredException exception =
+  //        assertThrows(
+  //            CustomerRegisteredException.class,
+  //            () -> clienteServiceImpl.createCliente(clienteRequestDto));
+  //
+  //    assertEquals("El cliente ya está registrado.", exception.getMessage());
+  //    verify(personRepository).findByCi("123456");
+  //    verify(clienteRepository).findByPerson(person);
+  //  }
 
   @Test
   @DisplayName("Should return all clients")
@@ -142,34 +141,53 @@ class ClienteServiceImplTest {
   @DisplayName("Should set client status to INACTIVE when deleting an existing client")
   void givenExistingClientIdShouldSetStatusToInactive() {
     // Given
-    Integer clientId = 1;
-    Client client = mock(Client.class);
+    String ci = "12345678";
+    Person person = MockUtil.createMockPerson(ci);
+    Client client = MockUtil.createMockClient(person);
 
-    when(clienteRepository.findById(clientId)).thenReturn(Optional.of(client));
-    when(clienteRepository.save(client)).thenReturn(client);
+    when(personRepository.findByCi(any())).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(any())).thenReturn(Optional.of(client));
+    when(clienteMapper.mapToResponseDto(any())).thenReturn(MockUtil.createMockClienteResponseDto(client));
 
     // When
-    clienteServiceImpl.deleteCliente(clientId);
+    clienteServiceImpl.deleteCliente(ci);
 
     // Then
-    verify(clienteRepository).findById(clientId);
-    verify(client).setStatus(StatusEnum.INACTIVE);
-    verify(clienteRepository).save(client);
+    assertEquals(StatusEnum.INACTIVE, client.getStatus());
   }
 
   @Test
   @DisplayName("Should throw exception when deleting a non-existent client")
   void givenNonExistentClientIdThenThrowException() {
     // Given
-    Integer clientId = 1;
-    when(clienteRepository.findById(clientId)).thenReturn(Optional.empty());
+    String ci = "12345678";
+    Person person = MockUtil.createMockPerson(ci);
+    when(personRepository.findByCi(any())).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(any())).thenReturn(Optional.empty());
 
     // When / Then
     Exception exception =
-        assertThrows(
-            CustomerNotFoundException.class, () -> clienteServiceImpl.deleteCliente(clientId));
+        assertThrows(CustomerNotFoundException.class, () -> clienteServiceImpl.deleteCliente(ci));
 
-    assertEquals("Client not found", exception.getMessage());
-    verify(clienteRepository).findById(clientId);
+    assertEquals("Client associated with CI " + ci + " not found", exception.getMessage());
+  }
+
+  @Test
+  @DisplayName("Should retrieve a client by CI when the client exists")
+  void givenExistingClientWhenGetClienteByCiShouldReturnClienteResponseDto() {
+    // given
+    String ci = "12345678";
+    Person person = MockUtil.createMockPerson(ci);
+    Client client = MockUtil.createMockClient(person);
+
+    when(personRepository.findByCi(any())).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(any())).thenReturn(Optional.of(client));
+    when(clienteMapper.mapToResponseDto(any())).thenReturn(MockUtil.createMockClienteResponseDto(client));
+
+    // when
+    ClienteResponseDto result = clienteServiceImpl.getClienteByCi(ci);
+
+    // then
+    assertNotNull(result);
   }
 }
