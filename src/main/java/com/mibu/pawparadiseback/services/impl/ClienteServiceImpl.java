@@ -8,6 +8,7 @@ import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.services.ClienteService;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.mapper.ClienteMapper;
 import com.mibu.pawparadiseback.services.mapper.PersonMapper;
@@ -97,6 +98,44 @@ public class ClienteServiceImpl implements ClienteService {
                 () ->
                     new CustomerNotFoundException(
                         "Client associated with CI " + ci + " not found"));
+    return clienteMapper.mapToResponseDto(client);
+  }
+
+  @Override
+  public ClienteResponseDto updateClienteByCi(String ci, UpdateClienteRequestDto updateClienteRequestDto) {
+    Person person =
+        personRepository
+            .findByCi(ci)
+            .orElseThrow(
+                () -> new CustomerNotFoundException("Person with CI " + ci + " not found"));
+    Client client =
+        clienteRepository
+            .findByPerson(person)
+            .orElseThrow(
+                () ->
+                    new CustomerNotFoundException(
+                        "Client associated with CI " + ci + " not found"));
+
+    if (updateClienteRequestDto.getName() != null) {
+      person.setName(updateClienteRequestDto.getName());
+    }
+    if (updateClienteRequestDto.getLastname() != null) {
+      person.setLastname(updateClienteRequestDto.getLastname());
+    }
+    if (updateClienteRequestDto.getEmail() != null) {
+      person.setEmail(updateClienteRequestDto.getEmail());
+    }
+    if (updateClienteRequestDto.getPhone() != null) {
+      person.setPhone(updateClienteRequestDto.getPhone());
+    }
+    if (updateClienteRequestDto.getAddress() != null) {
+      person.setAddress(updateClienteRequestDto.getAddress());
+    }
+    if (updateClienteRequestDto.getCountry() != null) {
+      person.setCountry(updateClienteRequestDto.getCountry());
+    }
+
+    personRepository.save(person);
     return clienteMapper.mapToResponseDto(client);
   }
 }

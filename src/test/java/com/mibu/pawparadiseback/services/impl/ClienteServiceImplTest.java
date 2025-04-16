@@ -10,6 +10,7 @@ import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.mapper.ClienteMapper;
 import com.mibu.pawparadiseback.services.mapper.PersonMapper;
@@ -189,5 +190,34 @@ class ClienteServiceImplTest {
 
     // then
     assertNotNull(result);
+  }
+
+  @Test
+  @DisplayName("Should update a client by CI when valid data is provided")
+  void givenValidCiAndUpdateRequest_whenUpdateClienteByCi_thenShouldUpdateClient() {
+    // Given
+    String ci = "123456";
+    UpdateClienteRequestDto updateRequest = new UpdateClienteRequestDto();
+    updateRequest.setName("Updated Name");
+    updateRequest.setLastname("Updated Lastname");
+    updateRequest.setEmail("updated.email@example.com");
+    updateRequest.setPhone("123-456-7890");
+    updateRequest.setAddress("Updated Address");
+    updateRequest.setCountry("Updated Country");
+
+    Person person = MockUtil.createMockPerson(ci);
+    Client client = MockUtil.createMockClient(person);
+
+    when(personRepository.findByCi(ci)).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
+    when(clienteMapper.mapToResponseDto(client)).thenReturn(new ClienteResponseDto());
+
+    // When
+    ClienteResponseDto response = clienteServiceImpl.updateClienteByCi(ci, updateRequest);
+
+    // Then
+    assertNotNull(response);
+    verify(personRepository).save(person);
+    verify(clienteRepository, never()).save(client);
   }
 }
