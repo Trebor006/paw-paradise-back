@@ -16,6 +16,9 @@ import com.mibu.pawparadiseback.services.exceptions.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MascotaServiceImpl implements MascotaService {
@@ -52,6 +55,19 @@ public class MascotaServiceImpl implements MascotaService {
     pet = petRepository.save(pet);
 
     // Retornar la respuesta
-    return mascotaMapper.toDto(pet);
+    return mascotaMapper.toResponseDto(pet);
+  }
+
+  @Override
+  public List<MascotaResponseDto> obtenerMascotasPorCliente(String ci) {
+    Person person = personRepository.findByCi(ci)
+        .orElseThrow(() -> new PersonNotFoundException("El cliente con CI " + ci + " no está registrado."));
+
+    Client client = clienteRepository.findByPerson(person)
+        .orElseThrow(() -> new ClientNotFoundException("El cliente con CI " + ci + " no está registrado."));
+
+    return petRepository.findByClientId(client.getId()).stream()
+        .map(mascotaMapper::toResponseDto)
+        .collect(Collectors.toList());
   }
 }
