@@ -118,6 +118,36 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/MascotaResponseDto"
+  /api/clientes/{ci}:
+    put:
+      summary: "PUT api/clientes/{ci}"
+      operationId: "updateClienteByCi"
+      parameters:
+        - name: "ci"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClienteRequestDto"
+            example:
+              name: "Updated Name"
+              lastname: "Updated Lastname"
+              email: "updated.email@example.com"
+              phone: "123-456-7890"
+              address: "Updated Address"
+              country: "Updated Country"
+        required: true
+      responses:
+        "200":
+          description: "Updated client details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteResponseDto"
 components:
   schemas:
     ClienteRequestDto:

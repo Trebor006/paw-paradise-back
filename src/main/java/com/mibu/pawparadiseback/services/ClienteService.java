@@ -1,6 +1,7 @@
 package com.mibu.pawparadiseback.services;
 
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +16,6 @@ public interface ClienteService {
   void deleteCliente(String ci);
 
   ClienteResponseDto getClienteByCi(String ci);
+
+  ClienteResponseDto updateClienteByCi(String ci, UpdateClienteRequestDto updateClienteRequestDto);
 }

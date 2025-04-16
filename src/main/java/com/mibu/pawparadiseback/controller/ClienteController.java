@@ -2,6 +2,7 @@ package com.mibu.pawparadiseback.controller;
 
 import com.mibu.pawparadiseback.services.ClienteService;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
+import com.mibu.pawparadiseback.services.dto.input.UpdateClienteRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.ClienteResponseDto;
 import com.mibu.pawparadiseback.services.dto.output.SuccessDto;
 import java.util.List;
@@ -40,6 +41,16 @@ public class ClienteController {
     ClienteResponseDto response = clienteService.getClienteByCi(ci);
     SuccessDto successDto =
         SuccessDto.builder().message("Client retrieved successfully").data(response).build();
+    return ResponseEntity.ok(successDto);
+  }
+
+  @PutMapping("/{ci}")
+  public ResponseEntity<SuccessDto> updateClienteByCi(
+      @PathVariable("ci") String ci,
+      @RequestBody UpdateClienteRequestDto updateClienteRequestDto) {
+    ClienteResponseDto response = clienteService.updateClienteByCi(ci, updateClienteRequestDto);
+    SuccessDto successDto =
+        SuccessDto.builder().message("Cliente updated successfully").data(response).build();
     return ResponseEntity.ok(successDto);
   }
 
