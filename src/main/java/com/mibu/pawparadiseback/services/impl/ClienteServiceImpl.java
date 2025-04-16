@@ -55,6 +55,7 @@ public class ClienteServiceImpl implements ClienteService {
       person = existingPerson.get();
     } else {
       person = personMapper.toEntity(clienteRequestDto);
+      person.setRole("CLIENT");
       person = personRepository.save(person);
     }
     return person;
