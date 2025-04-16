@@ -1,0 +1,79 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.liquibase.gradle' version '2.2.0'
+	id 'info.solidsoft.pitest' version '1.9.0'
+}
+
+group = 'com.mibu'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	mapstructVersion = "1.5.5.Final"
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.liquibase:liquibase-core'
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	developmentOnly "org.springframework.boot:spring-boot-devtools"
+
+	compileOnly 'org.projectlombok:lombok'
+	compileOnly "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+	implementation 'org.postgresql:postgresql:42.7.2'
+	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	testImplementation 'org.pitest:pitest-junit5-plugin:1.2.1'
+	testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.9.0'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs = [
+		'-Amapstruct.suppressGeneratorTimestamp=true',
+		'-Amapstruct.defaultComponentModel=spring'
+	]
+}
+
+pitest {
+	targetClasses = ['com.mibu.pawparadiseback.services.impl.*']
+	excludedClasses = ['com.mibu.pawparadiseback.MainApplication']
+	pitestVersion = '1.9.0'
+	junit5PluginVersion = '1.2.1'
+	threads = 4
+	outputFormats = ['XML', 'HTML']
+	timestampedReports = false
+	mutationThreshold = 60 // Umbral mínimo de cobertura de mutación
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <include file="00-initial/PPP-003.xml" relativeToChangelogFile="true"/>
+    <include file="01-PPP-57-eliminar_clientes/01-add-status-to-cliente.xml" relativeToChangelogFile="true"/>
+    <include file="02-PPP-61-registrar-mascota/add-status-to-pets.xml" relativeToChangelogFile="true"/>
+    <include file="03-PPP-46-listar-mascotas/add-type-to-pets.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>
