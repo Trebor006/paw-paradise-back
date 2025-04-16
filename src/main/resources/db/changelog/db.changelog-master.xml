@@ -6,5 +6,6 @@
 
     <include file="00-initial/PPP-003.xml" relativeToChangelogFile="true"/>
     <include file="01-PPP-57-eliminar_clientes/01-add-status-to-cliente.xml" relativeToChangelogFile="true"/>
+    <include file="02-PPP-61-registrar-mascota/add-status-to-pets.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
