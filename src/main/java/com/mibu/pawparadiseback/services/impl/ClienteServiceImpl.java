@@ -129,6 +129,18 @@ public class ClienteServiceImpl implements ClienteService {
     if (updateClienteRequestDto.getPhone() != null) {
       person.setPhone(updateClienteRequestDto.getPhone());
     }
+    if (updateClienteRequestDto.getImage() != null) {
+      person.setImage(updateClienteRequestDto.getImage());
+    }
+    if (updateClienteRequestDto.getGender() != null) {
+      person.setGender(updateClienteRequestDto.getGender());
+    }
+    if (updateClienteRequestDto.getBirthdate() != null) {
+      person.setBirthdate(updateClienteRequestDto.getBirthdate());
+    }
+    if (updateClienteRequestDto.getType() != null) {
+      person.setType(updateClienteRequestDto.getType());
+    }
     if (updateClienteRequestDto.getAddress() != null) {
       person.setAddress(updateClienteRequestDto.getAddress());
     }
