@@ -2,7 +2,7 @@ name: CI Java
 
 on:
   push:
-    branches: [ "master" , "feature/*" ]
+    branches: [ "master" , "feature/*", "hotfix/*" ]
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
