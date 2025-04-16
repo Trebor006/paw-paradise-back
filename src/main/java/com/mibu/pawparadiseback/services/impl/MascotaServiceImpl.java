@@ -13,11 +13,15 @@ import com.mibu.pawparadiseback.services.dto.input.UpdateMascotaRequestDto;
 import com.mibu.pawparadiseback.services.dto.output.MascotaResponseDto;
 import com.mibu.pawparadiseback.services.exceptions.ClientNotFoundException;
 import com.mibu.pawparadiseback.services.exceptions.PersonNotFoundException;
+import com.mibu.pawparadiseback.services.exceptions.PetNotFoundException;
 import com.mibu.pawparadiseback.services.mapper.MascotaMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -105,7 +109,7 @@ public class MascotaServiceImpl implements MascotaService {
             .findByIdAndClientId(mascotaId, client.getId())
             .orElseThrow(
                 () ->
-                    new IllegalArgumentException(
+                    new PetNotFoundException(
                         "La mascota con ID "
                             + mascotaId
                             + " no pertenece al cliente con CI "
@@ -141,5 +145,44 @@ public class MascotaServiceImpl implements MascotaService {
 
     // Retornar la respuesta
     return mascotaMapper.toResponseDto(pet);
+  }
+
+  @Override
+  public void eliminarMascota(String ci, Long mascotaId) {
+    Person person =
+        personRepository
+            .findByCi(ci)
+            .orElseThrow(
+                () ->
+                    new PersonNotFoundException(
+                        "El cliente con CI " + ci + " no está registrado."));
+
+    Client client =
+        clienteRepository
+            .findByPerson(person)
+            .orElseThrow(
+                () ->
+                    new ClientNotFoundException(
+                        "El cliente con CI " + ci + " no está registrado."));
+
+    Pet pet =
+        petRepository
+            .findByIdAndClientId(mascotaId, client.getId())
+            .orElseThrow(
+                () ->
+                    new PetNotFoundException(
+                        "La mascota con ID "
+                            + mascotaId
+                            + " no pertenece al cliente con CI "
+                            + ci
+                            + "."));
+
+    if (pet.getStatus() != StatusEnum.ACTIVE) {
+      throw new IllegalStateException("Solo se pueden eliminar mascotas con estado ACTIVO.");
+    }
+
+    // Actualizar el estado de la mascota a INACTIVO en lugar de eliminarla
+    pet.setStatus(StatusEnum.INACTIVE);
+    petRepository.save(pet);
   }
 }

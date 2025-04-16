@@ -44,4 +44,12 @@ public class MascotaController {
     MascotaResponseDto response = mascotaService.actualizarMascota(ci, mascotaId, updateMascotaRequestDto);
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
+
+  @DeleteMapping("/cliente/{ci}/{mascotaId}")
+  public ResponseEntity<Void> eliminarMascota(
+      @PathVariable("ci") String ci, @PathVariable("mascotaId") Long mascotaId) {
+    log.info("Deleting pet with ID {} for client with CI {}", mascotaId, ci);
+    mascotaService.eliminarMascota(ci, mascotaId);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
 }

@@ -12,4 +12,6 @@ public interface MascotaService {
   List<MascotaResponseDto> obtenerMascotasPorCliente(String ci);
 
   MascotaResponseDto actualizarMascota(String ci, Long mascotaId, UpdateMascotaRequestDto updateMascotaRequestDto);
+
+  void eliminarMascota(String ci, Long mascotaId);
 }
