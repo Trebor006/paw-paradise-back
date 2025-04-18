@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="modify-pet-image-data-type" author="robert">
+        <modifyDataType tableName="pet" columnName="image" newDataType="TEXT"/>
+
+        <rollback>
+            <modifyDataType tableName="pet" columnName="image" newDataType="VARCHAR(100)"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
