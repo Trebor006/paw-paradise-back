@@ -35,7 +35,7 @@ public class Pet {
   @Column(nullable = false)
   private LocalDate birthdate;
 
-  @Column(nullable = true)
+  @Column(columnDefinition = "TEXT")
   private String image;
 
   @Column(nullable = false)
