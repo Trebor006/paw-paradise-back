@@ -12,7 +12,7 @@ public interface ClienteMapper {
 
   Client toEntity(ClienteRequestDto dto);
   
-  @Mapping(source = "person.id", target = "id")
+  @Mapping(source = "id", target = "id")
   @Mapping(source = "person.ci", target = "ci")
   @Mapping(source = "person.name", target = "name")
   @Mapping(source = "person.lastname", target = "lastname")
