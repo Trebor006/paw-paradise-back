@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 public interface ClienteMapper {
 
   Client toEntity(ClienteRequestDto dto);
-
+  
   @Mapping(source = "person.id", target = "id")
   @Mapping(source = "person.ci", target = "ci")
   @Mapping(source = "person.name", target = "name")
