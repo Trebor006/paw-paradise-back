@@ -28,4 +28,3 @@ spring:
       allowed-methods: "*"
       allowed-headers: "*"
       allow-credentials: true
-
