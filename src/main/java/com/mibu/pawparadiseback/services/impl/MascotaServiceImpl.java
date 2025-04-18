@@ -189,5 +189,4 @@ public class MascotaServiceImpl implements MascotaService {
         .map(mascotaMapper::toResponseDto)
         .collect(Collectors.toList());
   }
-
 }

@@ -185,6 +185,7 @@ paths:
           description: "Client or pet not found"
         "500":
           description: "Internal server error"
+
   /api/mascotas/active:
     get:
       summary: Get all active pets
@@ -200,6 +201,7 @@ paths:
                   $ref: '#/components/schemas/MascotaResponseDto'
         '500':
           description: Server error
+
 components:
   schemas:
     ClienteRequestDto:

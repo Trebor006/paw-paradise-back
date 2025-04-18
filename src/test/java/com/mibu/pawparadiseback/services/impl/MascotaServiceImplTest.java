@@ -283,4 +283,5 @@ class MascotaServiceImplTest {
     assertEquals(2, result.size());
     verify(petRepository, times(1)).findByStatus(any());
   }
+
 }
