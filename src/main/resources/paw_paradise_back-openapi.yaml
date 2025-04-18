@@ -221,6 +221,30 @@ components:
       properties:
         id:
           type: "integer"
+          format: "int64"
+        ci:
+          type: "string"
+        name:
+          type: "string"
+        lastname:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        phone:
+          type: "string"
+        image:
+          type: "string"
+        gender:
+          type: "string"
+        birthdate:
+          type: "string"
+          format: "date-time"
+        type:
+          type: "string"
+        address:
+          type: "string"
+        country:
           format: "int32"
         createdAt:
           type: "string"
@@ -268,6 +292,29 @@ components:
       summary: "Example list of clients"
       value:
         - id: 1
+          ci: "123456"
+          name: "John"
+          lastname: "Doe"
+          email: "john.doe@example.com"
+          phone: "123-456-7890"
+          image: "image_url"
+          gender: "male"
+          birthdate: "1990-01-01T00:00:00Z"
+          type: "regular"
+          address: "123 Main St"
+          country: "USA"
+        - id: 2
+          ci: "654321"
+          name: "Jane"
+          lastname: "Smith"
+          email: "jane.smith@example.com"
+          phone: "987-654-3210"
+          image: "image_url"
+          gender: "female"
+          birthdate: "1985-05-15T00:00:00Z"
+          type: "premium"
+          address: "456 Elm St"
+          country: "Canada"
           createdAt: "2025-04-13T12:00:00Z"
           personId: 101
           clientName: "John Doe"
@@ -298,6 +345,17 @@ components:
       summary: "Example client response"
       value:
         id: 1
+        ci: "123456"
+        name: "John"
+        lastname: "Doe"
+        email: "john.doe@example.com"
+        phone: "123-456-7890"
+        image: "image_url"
+        gender: "male"
+        birthdate: "1990-01-01T00:00:00Z"
+        type: "regular"
+        address: "123 Main St"
+        country: "USA"
         createdAt: "2025-04-13T12:00:00Z"
         personId: 101
         clientName: "John Doe"
