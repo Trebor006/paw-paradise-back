@@ -1,6 +1,7 @@
 package com.mibu.pawparadiseback.repository;
 
 import com.mibu.pawparadiseback.domain.Pet;
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,4 +13,6 @@ public interface PetRepository extends JpaRepository<Pet, Integer> {
   List<Pet> findByClientId(Long clientId);
 
     Optional<Pet> findByIdAndClientId(Long mascotaId, Long id);
+
+    List<Pet> findByStatus(StatusEnum status);
 }

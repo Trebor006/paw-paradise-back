@@ -64,6 +64,7 @@ class ClienteServiceImplTest {
     verify(personRepository).findByCi("123456");
     verify(personRepository).save(person);
     verify(clienteRepository).save(client);
+
     verify(clienteMapper).mapToResponseDto(client);
   }
 
@@ -80,6 +81,7 @@ class ClienteServiceImplTest {
     when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
     when(clienteMapper.toEntity(clienteRequestDto)).thenReturn(client);
     when(clienteRepository.save(client)).thenReturn(client);
+
     when(clienteMapper.mapToResponseDto(client)).thenReturn(clienteResponseDto);
 
     // When
@@ -89,6 +91,7 @@ class ClienteServiceImplTest {
     assertEquals(clienteResponseDto, result);
     verify(personRepository).findByCi("123456");
     verify(clienteRepository).save(client);
+
     verify(clienteMapper).mapToResponseDto(client);
   }
 

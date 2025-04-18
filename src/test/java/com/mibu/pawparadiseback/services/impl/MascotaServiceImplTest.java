@@ -262,4 +262,25 @@ class MascotaServiceImplTest {
     assertThrows(
         PetNotFoundException.class, () -> mascotaServiceImpl.eliminarMascota(ci, mascotaId));
   }
+
+  @Test
+  @DisplayName("Should return a list of active pets")
+  void givenActivePetsWhenObtenerMascotasActivasThenReturnListOfActivePets() {
+    // Given
+    Pet activePet1 = MockUtil.createPet();
+    activePet1.setStatus(StatusEnum.ACTIVE);
+    Pet activePet2 = MockUtil.createPet();
+    activePet2.setStatus(StatusEnum.ACTIVE);
+
+    List<Pet> pets = List.of(activePet1, activePet2);
+    when(petRepository.findByStatus(any())).thenReturn(pets);
+
+    // When
+    List<MascotaResponseDto> result = mascotaServiceImpl.obtenerMascotasActivas();
+
+    // Then
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    verify(petRepository, times(1)).findByStatus(any());
+  }
 }
