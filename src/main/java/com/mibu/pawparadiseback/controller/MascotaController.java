@@ -28,7 +28,7 @@ public class MascotaController {
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 
-  @GetMapping("/{ci}")
+  @GetMapping("/cliente/{ci}")
   public ResponseEntity<List<MascotaResponseDto>> listarMascotasPorCliente(@PathVariable("ci") String ci) {
     log.info("Listing pets for client with CI: {}", ci);
     List<MascotaResponseDto> mascotas = mascotaService.obtenerMascotasPorCliente(ci);
@@ -42,6 +42,13 @@ public class MascotaController {
     List<MascotaResponseDto> mascotas = mascotaService.obtenerMascotasActivas();
 
     return new ResponseEntity<>(mascotas, HttpStatus.OK);
+  }
+
+  @GetMapping("/{mascotaId}")
+  public ResponseEntity<MascotaResponseDto> obtenerMascotaPorId(@PathVariable("mascotaId") Long mascotaId) {
+    log.info("Fetching pet with ID: {}", mascotaId);
+    MascotaResponseDto mascota = mascotaService.obtenerMascotaPorId(mascotaId);
+    return new ResponseEntity<>(mascota, HttpStatus.OK);
   }
 
   @PutMapping("/cliente/{ci}/{mascotaId}")

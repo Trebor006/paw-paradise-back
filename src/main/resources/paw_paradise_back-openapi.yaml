@@ -201,6 +201,29 @@ paths:
                   $ref: '#/components/schemas/MascotaResponseDto'
         '500':
           description: Server error
+  /api/mascotas/pet/{mascotaId}:
+    get:
+      summary: "GET api/mascotas/pet/{mascotaId}"
+      operationId: "getMascotaById"
+      parameters:
+        - name: "mascotaId"
+          in: "path"
+          required: true
+          description: "The ID of the pet to fetch"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "Pet details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MascotaResponseDto"
+        "404":
+          description: "Pet not found"
+        "500":
+          description: "Internal server error"
 
 components:
   schemas:
