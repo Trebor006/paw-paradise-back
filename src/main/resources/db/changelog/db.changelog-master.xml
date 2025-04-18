@@ -9,5 +9,6 @@
     <include file="02-PPP-61-registrar-mascota/add-status-to-pets.xml" relativeToChangelogFile="true"/>
     <include file="03-PPP-46-listar-mascotas/add-type-to-pets.xml" relativeToChangelogFile="true"/>
     <include file="04-PPP-72-fix-customer-table-bug/fix-customer-bug.xml" relativeToChangelogFile="true"/>
+    <include file="05-PPP-76-fix-pet-table-bug/fix-pet-bug.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
