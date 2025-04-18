@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class MascotaServiceImpl implements MascotaService {
@@ -185,4 +182,12 @@ public class MascotaServiceImpl implements MascotaService {
     pet.setStatus(StatusEnum.INACTIVE);
     petRepository.save(pet);
   }
+
+  @Override
+  public List<MascotaResponseDto> obtenerMascotasActivas() {
+    return petRepository.findByStatus(StatusEnum.ACTIVE).stream()
+        .map(mascotaMapper::toResponseDto)
+        .collect(Collectors.toList());
+  }
+
 }
