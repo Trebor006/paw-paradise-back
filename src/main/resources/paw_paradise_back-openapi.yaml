@@ -245,6 +245,18 @@ components:
         address:
           type: "string"
         country:
+          format: "int32"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        personId:
+          type: "integer"
+          format: "int32"
+        clientName:
+          type: "string"
+        clientEmail:
+          type: "string"
+        personCi:
           type: "string"
     MascotaRequestDto:
       type: "object"
@@ -303,6 +315,17 @@ components:
           type: "premium"
           address: "456 Elm St"
           country: "Canada"
+          createdAt: "2025-04-13T12:00:00Z"
+          personId: 101
+          clientName: "John Doe"
+          clientEmail: "john.doe@example.com"
+          personCi: "123456"
+        - id: 2
+          createdAt: "2025-04-13T12:00:00Z"
+          personId: 102
+          clientName: "Jane Smith"
+          clientEmail: "jane.smith@example.com"
+          personCi: "654321"
     ClienteRequestExample:
       summary: "Example client request"
       value:
@@ -333,6 +356,11 @@ components:
         type: "regular"
         address: "123 Main St"
         country: "USA"
+        createdAt: "2025-04-13T12:00:00Z"
+        personId: 101
+        clientName: "John Doe"
+        clientEmail: "john.doe@example.com"
+        personCi: "123456"
     MascotaRequestExample:
       summary: "Example pet request"
       value:

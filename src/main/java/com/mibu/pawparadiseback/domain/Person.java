@@ -2,10 +2,12 @@ package com.mibu.pawparadiseback.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @Entity
@@ -56,4 +58,5 @@ public class Person {
 
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
+
 }
