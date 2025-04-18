@@ -1,6 +1,6 @@
 package com.mibu.pawparadiseback.services.dto.input;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,17 +9,13 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClienteRequestDto {
+public class UpdateMascotaRequestDto {
 
-  String ci;
   String name;
-  String lastname;
-  String email;
-  String phone;
-  String image;
-  String gender;
-  LocalDateTime birthdate;
   String type;
-  String address;
-  String country;
+  String gender;
+  String breed;
+  LocalDate birthdate;
+  String image;
+  String ci;
 }

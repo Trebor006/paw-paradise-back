@@ -8,6 +8,21 @@ servers:
     description: "Local server"
 paths:
   /api/clientes:
+    get:
+      summary: "GET api/clientes"
+      operationId: "getAllClientes"
+      responses:
+        "200":
+          description: "List of all clients"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ClienteResponseDto"
+              examples:
+                example1:
+                  $ref: "#/components/examples/ClientesListExample"
     post:
       summary: "POST api/clientes"
       operationId: "createCliente"
@@ -16,6 +31,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/ClienteRequestDto"
+            example:
+              ClienteRequestExample:
+                $ref: "#/components/examples/ClienteRequestExample"
         required: true
       responses:
         "200":
@@ -24,6 +42,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ClienteResponseDto"
+              examples:
+                ClienteResponseExample:
+                  $ref: "#/components/examples/ClienteResponseExample"
   /api/clientes/{id}:
     get:
       summary: "GET api/clientes/{id}"
@@ -55,6 +76,115 @@ paths:
       responses:
         "204":
           description: "No Content"
+  /api/mascotas:
+    post:
+      summary: "POST api/mascotas"
+      operationId: "registrarMascota"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MascotaRequestDto"
+            example:
+              MascotaRequestExample:
+                $ref: "#/components/examples/MascotaRequestExample"
+        required: true
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MascotaResponseDto"
+              examples:
+                MascotaResponseExample:
+                  $ref: "#/components/examples/MascotaResponseExample"
+  /api/mascotas/cliente/{ci}:
+    get:
+      summary: "GET api/mascotas/cliente/{ci}"
+      operationId: "listarMascotasPorCliente"
+      parameters:
+        - name: "ci"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "List of pets for the client"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/MascotaResponseDto"
+  /api/clientes/{ci}:
+    put:
+      summary: "PUT api/clientes/{ci}"
+      operationId: "updateClienteByCi"
+      parameters:
+        - name: "ci"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClienteRequestDto"
+            example:
+              name: "Updated Name"
+              lastname: "Updated Lastname"
+              email: "updated.email@example.com"
+              phone: "123-456-7890"
+              address: "Updated Address"
+              country: "Updated Country"
+        required: true
+      responses:
+        "200":
+          description: "Updated client details"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClienteResponseDto"
+  /api/mascotas/{ci}/{mascotaId}:
+    put:
+      summary: "Update a pet by client CI and pet ID"
+      operationId: "updatePet"
+      parameters:
+        - name: "ci"
+          in: "path"
+          required: true
+          description: "Client CI"
+          schema:
+            type: "string"
+        - name: "mascotaId"
+          in: "path"
+          required: true
+          description: "Pet ID"
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMascotaRequestDto"
+      responses:
+        "200":
+          description: "Pet updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MascotaResponseDto"
+        "400":
+          description: "Invalid input"
+        "404":
+          description: "Client or pet not found"
+        "500":
+          description: "Internal server error"
 components:
   schemas:
     ClienteRequestDto:
@@ -91,6 +221,30 @@ components:
       properties:
         id:
           type: "integer"
+          format: "int64"
+        ci:
+          type: "string"
+        name:
+          type: "string"
+        lastname:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        phone:
+          type: "string"
+        image:
+          type: "string"
+        gender:
+          type: "string"
+        birthdate:
+          type: "string"
+          format: "date-time"
+        type:
+          type: "string"
+        address:
+          type: "string"
+        country:
           format: "int32"
         createdAt:
           type: "string"
@@ -104,3 +258,123 @@ components:
           type: "string"
         personCi:
           type: "string"
+    MascotaRequestDto:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        species:
+          type: "string"
+        breed:
+          type: "string"
+        age:
+          type: "integer"
+        ownerCi:
+          type: "string"
+    MascotaResponseDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        name:
+          type: "string"
+        species:
+          type: "string"
+        breed:
+          type: "string"
+        age:
+          type: "integer"
+        ownerCi:
+          type: "string"
+  examples:
+    ClientesListExample:
+      summary: "Example list of clients"
+      value:
+        - id: 1
+          ci: "123456"
+          name: "John"
+          lastname: "Doe"
+          email: "john.doe@example.com"
+          phone: "123-456-7890"
+          image: "image_url"
+          gender: "male"
+          birthdate: "1990-01-01T00:00:00Z"
+          type: "regular"
+          address: "123 Main St"
+          country: "USA"
+        - id: 2
+          ci: "654321"
+          name: "Jane"
+          lastname: "Smith"
+          email: "jane.smith@example.com"
+          phone: "987-654-3210"
+          image: "image_url"
+          gender: "female"
+          birthdate: "1985-05-15T00:00:00Z"
+          type: "premium"
+          address: "456 Elm St"
+          country: "Canada"
+          createdAt: "2025-04-13T12:00:00Z"
+          personId: 101
+          clientName: "John Doe"
+          clientEmail: "john.doe@example.com"
+          personCi: "123456"
+        - id: 2
+          createdAt: "2025-04-13T12:00:00Z"
+          personId: 102
+          clientName: "Jane Smith"
+          clientEmail: "jane.smith@example.com"
+          personCi: "654321"
+    ClienteRequestExample:
+      summary: "Example client request"
+      value:
+        ci: "123456"
+        name: "John"
+        lastname: "Doe"
+        email: "john.doe@example.com"
+        phone: "123-456-7890"
+        image: "image_url"
+        gender: "male"
+        birthdate: "1990-01-01T00:00:00Z"
+        type: "regular"
+        address: "123 Main St"
+        country: "USA"
+        role: "client"
+    ClienteResponseExample:
+      summary: "Example client response"
+      value:
+        id: 1
+        ci: "123456"
+        name: "John"
+        lastname: "Doe"
+        email: "john.doe@example.com"
+        phone: "123-456-7890"
+        image: "image_url"
+        gender: "male"
+        birthdate: "1990-01-01T00:00:00Z"
+        type: "regular"
+        address: "123 Main St"
+        country: "USA"
+        createdAt: "2025-04-13T12:00:00Z"
+        personId: 101
+        clientName: "John Doe"
+        clientEmail: "john.doe@example.com"
+        personCi: "123456"
+    MascotaRequestExample:
+      summary: "Example pet request"
+      value:
+        name: "Buddy"
+        species: "Dog"
+        breed: "Golden Retriever"
+        age: 3
+        ownerCi: "123456"
+    MascotaResponseExample:
+      summary: "Example pet response"
+      value:
+        id: 1
+        name: "Buddy"
+        species: "Dog"
+        breed: "Golden Retriever"
+        age: 3
+        ownerCi: "123456"

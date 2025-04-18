@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClienteRequestDto {
-
+public class UpdateClienteRequestDto {
   String ci;
   String name;
   String lastname;

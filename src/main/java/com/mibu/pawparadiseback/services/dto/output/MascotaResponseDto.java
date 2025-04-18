@@ -1,6 +1,7 @@
 package com.mibu.pawparadiseback.services.dto.output;
 
-import java.time.LocalDateTime;
+import com.mibu.pawparadiseback.domain.enums.StatusEnum;
+import java.time.LocalDate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,17 +10,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClienteResponseDto {
+public class MascotaResponseDto {
+
   Long id;
-  String ci;
   String name;
-  String lastname;
-  String email;
-  String phone;
-  String image;
-  String gender;
-  LocalDateTime birthdate;
   String type;
-  String address;
-  String country;
+  String gender;
+  String breed;
+  LocalDate birthdate;
+  String image;
+  Long clientId;
+  StatusEnum status;
 }
