@@ -190,4 +190,15 @@ public class MascotaServiceImpl implements MascotaService {
         .collect(Collectors.toList());
   }
 
+  @Override
+  public MascotaResponseDto obtenerMascotaPorId(Long mascotaId) {
+    Pet pet = petRepository.findById(mascotaId)
+        .orElseThrow(() -> new PetNotFoundException("Pet with ID " + mascotaId + " not found."));
+
+    if (!StatusEnum.ACTIVE.equals(pet.getStatus())) {
+      throw new PetNotFoundException("Pet with ID " + mascotaId + " is not active.");
+    }
+
+    return mascotaMapper.toResponseDto(pet);
+  }
 }

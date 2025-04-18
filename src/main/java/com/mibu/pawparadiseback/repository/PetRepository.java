@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PetRepository extends JpaRepository<Pet, Integer> {
+public interface PetRepository extends JpaRepository<Pet, Long> {
   List<Pet> findByClientId(Long clientId);
 
     Optional<Pet> findByIdAndClientId(Long mascotaId, Long id);
