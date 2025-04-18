@@ -35,6 +35,14 @@ public class MascotaController {
     return new ResponseEntity<>(mascotas, HttpStatus.OK);
   }
 
+  @GetMapping
+  public ResponseEntity<List<MascotaResponseDto>> listarMascotasActivas() {
+    log.info("Listing all active pets");
+    List<MascotaResponseDto> mascotas = mascotaService.obtenerMascotasActivas();
+
+    return new ResponseEntity<>(mascotas, HttpStatus.OK);
+  }
+
   @PutMapping("/cliente/{ci}/{mascotaId}")
   public ResponseEntity<MascotaResponseDto> actualizarMascota(
       @PathVariable("ci") String ci,
