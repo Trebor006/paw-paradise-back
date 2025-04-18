@@ -2,9 +2,9 @@ name: CI Java
 
 on:
   push:
-    branches: [ "master" , "feature/*", "hotfix/*" ]
-  pull_request:
     branches: [ "master" ]
+  pull_request:
+    branches: [ "master" , "develop" ]
   workflow_dispatch:
 
 permissions:
@@ -57,17 +57,17 @@ jobs:
           repoOwner: trebor006
           repository: paw-paradise-back
           tag: latest
-#
-#      - name: Install doctl
-#        uses: digitalocean/action-doctl@v2
-#        with:
-#          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-#
-#      - name: Log in to DO Container Registry
-#        run: doctl registry login --expiry-seconds 600
-#
-#      - name: Tag image
-#        run:
-#          docker tag trebor006/paw-paradise-back:latest registry.digitalocean.com/paw-paradise/paw-paradise-back:1.0.0
-#      - name: Push image to DO Container Registry
-#        run: docker push registry.digitalocean.com/paw-paradise/paw-paradise-back:1.0.0
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DO Container Registry
+        run: doctl registry login --expiry-seconds 600
+
+      - name: Tag image
+        run:
+          docker tag trebor006/paw-paradise-back:latest registry.digitalocean.com/paw-paradise/paw-paradise-back:1.0.0
+      - name: Push image to DO Container Registry
+        run: docker push registry.digitalocean.com/paw-paradise/paw-paradise-back:1.0.0
