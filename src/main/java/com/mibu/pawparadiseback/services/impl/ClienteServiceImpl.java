@@ -18,6 +18,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -32,6 +33,7 @@ public class ClienteServiceImpl implements ClienteService {
   private final ClienteMapper clienteMapper;
 
   @Override
+  @Transactional
   public ClienteResponseDto createCliente(ClienteRequestDto clienteRequestDto) {
     Optional<Person> existingPerson = personRepository.findByCi(clienteRequestDto.getCi());
     Person person = getPerson(clienteRequestDto, existingPerson);
