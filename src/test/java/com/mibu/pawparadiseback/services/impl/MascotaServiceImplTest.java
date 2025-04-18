@@ -283,4 +283,25 @@ class MascotaServiceImplTest {
     assertEquals(2, result.size());
     verify(petRepository, times(1)).findByStatus(any());
   }
+
+  @Test
+  @DisplayName("Should fetch a pet by ID when the pet is active")
+  void shouldFetchPetByIdWhenActive() {
+    // Given
+    Long mascotaId = 1L;
+    Pet pet = MockUtil.createPet();
+    pet.setStatus(StatusEnum.ACTIVE);
+
+    when(petRepository.findById(mascotaId)).thenReturn(Optional.of(pet));
+    when(mascotaMapper.toResponseDto(pet)).thenReturn(MockUtil.createMascotaResponseDto());
+
+    // When
+    MascotaResponseDto result = mascotaServiceImpl.obtenerMascotaPorId(mascotaId);
+
+    // Then
+    assertNotNull(result);
+    assertEquals(pet.getId(), result.getId());
+    verify(petRepository).findById(mascotaId);
+    verify(mascotaMapper).toResponseDto(pet);
+  }
 }

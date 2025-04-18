@@ -16,4 +16,6 @@ public interface MascotaService {
   void eliminarMascota(String ci, Long mascotaId);
 
   List<MascotaResponseDto> obtenerMascotasActivas();
+
+  MascotaResponseDto obtenerMascotaPorId(Long mascotaId);
 }
