@@ -4,7 +4,9 @@ info:
   description: "paw_paradise_back API"
   version: "1.0.0"
 servers:
-  - url: "https://localhost:8081"
+  - url: "http://localhost:8081"
+    description: "Local server"
+  - url: "https://paw-paradise-backend-app-f85n2.ondigitalocean.app"
     description: "Local server"
 paths:
   /api/clientes:
