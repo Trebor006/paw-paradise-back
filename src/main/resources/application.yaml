@@ -24,7 +24,7 @@ spring:
 
   web:
     cors:
-      allowed-origins: http://localhost:8080
+      allowed-origins: http://localhost:8080, https://paw-paradise-backend-app-f85n2.ondigitalocean.app
       allowed-methods: "*"
       allowed-headers: "*"
       allow-credentials: true
