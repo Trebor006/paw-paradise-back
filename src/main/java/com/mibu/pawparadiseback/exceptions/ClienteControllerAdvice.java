@@ -11,13 +11,29 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ClienteControllerAdvice {
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<ErrorDto> handleException(Exception ex) {
+  @ExceptionHandler({
+    CustomerNotFoundException.class,
+    PersonNotFoundException.class,
+    ClientNotFoundException.class,
+    CustomerRegisteredException.class
+  })
+  public ResponseEntity<ErrorDto> handleException(Object ex) {
+    String message = "";
+    if (ex instanceof CustomerNotFoundException) {
+      message = ((CustomerNotFoundException) ex).getMessage();
+    } else if (ex instanceof PersonNotFoundException) {
+      message = ((PersonNotFoundException) ex).getMessage();
+    } else if (ex instanceof ClientNotFoundException) {
+      message = ((ClientNotFoundException) ex).getMessage();
+    } else if (ex instanceof CustomerRegisteredException) {
+      message = ((CustomerRegisteredException) ex).getMessage();
+    }
+
     ErrorDto errorDto =
         ErrorDto.builder()
             .success(false)
-            .message("An error occurred" + ex.getMessage())
-            .details("An error occurred" + ex.getMessage())
+            .message(message)
+            .details(message)
             .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
             .build();
     log.error(errorDto.toString());
