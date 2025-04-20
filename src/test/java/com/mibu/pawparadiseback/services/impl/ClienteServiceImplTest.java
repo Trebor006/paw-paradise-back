@@ -7,6 +7,7 @@ import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
 import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
+import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.services.dto.input.ClienteRequestDto;
@@ -95,28 +96,30 @@ class ClienteServiceImplTest {
     verify(clienteMapper).mapToResponseDto(client);
   }
 
-  //  @Test
-  //  @DisplayName("Should throw exception when client already exists")
-  //  void shouldThrowExceptionWhenClientAlreadyExists() {
-  //    // Given
-  //    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
-  //    Person person = mock(Person.class);
-  //    Client client = mock(Client.class);
-  //
-  //    when(clienteRequestDto.getCi()).thenReturn("123456");
-  //    when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
-  //    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
-  //
-  //    // When / Then
-  //    CustomerRegisteredException exception =
-  //        assertThrows(
-  //            CustomerRegisteredException.class,
-  //            () -> clienteServiceImpl.createCliente(clienteRequestDto));
-  //
-  //    assertEquals("El cliente ya está registrado.", exception.getMessage());
-  //    verify(personRepository).findByCi("123456");
-  //    verify(clienteRepository).findByPerson(person);
-  //  }
+  @Test
+  @DisplayName("Should throw CustomerRegisteredException when client already exists")
+  void shouldThrowCustomerRegisteredExceptionWhenClientAlreadyExists() {
+    // Given
+    ClienteRequestDto clienteRequestDto = mock(ClienteRequestDto.class);
+    Person person = mock(Person.class);
+    Client client = mock(Client.class);
+
+    when(clienteRequestDto.getCi()).thenReturn("123456");
+    when(personRepository.findByCi("123456")).thenReturn(Optional.of(person));
+    when(clienteRepository.findByPerson(person)).thenReturn(Optional.of(client));
+
+    // When / Then
+    CustomerRegisteredException exception =
+        assertThrows(
+            CustomerRegisteredException.class,
+            () -> clienteServiceImpl.createCliente(clienteRequestDto));
+
+    assertEquals("El cliente ya está registrado.", exception.getMessage());
+    verify(personRepository).findByCi("123456");
+    verify(clienteRepository).findByPerson(person);
+    verifyNoInteractions(personMapper);
+    verifyNoInteractions(clienteMapper);
+  }
 
   @Test
   @DisplayName("Should return all clients")
@@ -151,7 +154,8 @@ class ClienteServiceImplTest {
 
     when(personRepository.findByCi(any())).thenReturn(Optional.of(person));
     when(clienteRepository.findByPerson(any())).thenReturn(Optional.of(client));
-    when(clienteMapper.mapToResponseDto(any())).thenReturn(MockUtil.createMockClienteResponseDto(client));
+    when(clienteMapper.mapToResponseDto(any()))
+        .thenReturn(MockUtil.createMockClienteResponseDto(client));
 
     // When
     clienteServiceImpl.deleteCliente(ci);
@@ -186,7 +190,8 @@ class ClienteServiceImplTest {
 
     when(personRepository.findByCi(any())).thenReturn(Optional.of(person));
     when(clienteRepository.findByPerson(any())).thenReturn(Optional.of(client));
-    when(clienteMapper.mapToResponseDto(any())).thenReturn(MockUtil.createMockClienteResponseDto(client));
+    when(clienteMapper.mapToResponseDto(any()))
+        .thenReturn(MockUtil.createMockClienteResponseDto(client));
 
     // when
     ClienteResponseDto result = clienteServiceImpl.getClienteByCi(ci);
