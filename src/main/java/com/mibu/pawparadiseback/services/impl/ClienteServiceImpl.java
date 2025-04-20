@@ -2,9 +2,9 @@ package com.mibu.pawparadiseback.services.impl;
 
 import com.mibu.pawparadiseback.domain.Client;
 import com.mibu.pawparadiseback.domain.Person;
-
 import com.mibu.pawparadiseback.domain.enums.StatusEnum;
 import com.mibu.pawparadiseback.exceptions.CustomerNotFoundException;
+import com.mibu.pawparadiseback.exceptions.CustomerRegisteredException;
 import com.mibu.pawparadiseback.repository.ClienteRepository;
 import com.mibu.pawparadiseback.repository.PersonRepository;
 import com.mibu.pawparadiseback.services.ClienteService;
@@ -39,15 +39,16 @@ public class ClienteServiceImpl implements ClienteService {
     Person person = getPerson(clienteRequestDto, existingPerson);
 
     Optional<Client> existingClient = clienteRepository.findByPerson(person);
-    Client client;
     if (existingClient.isPresent()) {
-      client = existingClient.get();
-    } else {
-      client = clienteMapper.toEntity(clienteRequestDto);
-      client.setPerson(person);
-      client.setStatus(StatusEnum.ACTIVE);
-      client = clienteRepository.save(client);
+      log.error(EL_CLIENTE_YA_ESTA_REGISTRADO);
+      throw new CustomerRegisteredException(EL_CLIENTE_YA_ESTA_REGISTRADO);
     }
+
+    Client client;
+    client = clienteMapper.toEntity(clienteRequestDto);
+    client.setPerson(person);
+    client.setStatus(StatusEnum.ACTIVE);
+    client = clienteRepository.save(client);
 
     return clienteMapper.mapToResponseDto(client);
   }
@@ -106,7 +107,18 @@ public class ClienteServiceImpl implements ClienteService {
   }
 
   @Override
-  public ClienteResponseDto updateClienteByCi(String ci, UpdateClienteRequestDto updateClienteRequestDto) {
+  public ClienteResponseDto updateClienteByCi(
+      String ci, UpdateClienteRequestDto updateClienteRequestDto) {
+
+    Optional<Person> personOptional = personRepository.findByEmail(updateClienteRequestDto.getEmail());
+    if (personOptional.isPresent()) {
+      var person = personOptional.get();
+      if (!person.getCi().equals(ci)) {
+        throw new CustomerRegisteredException(
+            "Email " + updateClienteRequestDto.getEmail() + " ya se encuentra en uso.");
+      }
+    }
+
     Person person =
         personRepository
             .findByCi(ci)
