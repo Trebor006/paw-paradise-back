@@ -1,0 +1,73 @@
+@startuml
+title Flujo de Despliegue - Proyecto Paw Paradise
+
+skinparam linetype ortho
+skinparam defaultTextAlignment center
+skinparam componentStyle uml2
+skinparam shadowing false
+
+left to right direction
+
+actor "Equipo de Desarrollo" as dev
+actor "Usuarios Finales" as end_users
+
+' GitHub
+rectangle "GitHub" as github #DAE8FC {
+  component "Repositorio\n(paw-paradise)" as repo #F5F5F5
+}
+
+' GitHub Actions
+rectangle "GitHub Actions" as gha #FFF2CC {
+  component "Workflow\nCI/CD" as workflow #FFF2CC
+}
+
+' DockerHub
+node "DockerHub" <<Cloud>> #D0E6A5 {
+  component "Imágenes Docker\n(front, back)" as dockerhub #E2F0CB
+}
+
+' Doppler
+node "Doppler" <<Cloud>> #D5F5E3 {
+  component "Secrets/Env\nVariables" as doppler #D5F5E3
+}
+
+' DigitalOcean
+rectangle "DigitalOcean\n(Droplet Ubuntu)" as digitalocean #DAE8FC {
+  node "Contenedor\nFrontend\n(React)" as front #B3E5FC
+  node "Contenedor\nBackend\n(Spring Boot)" as back #C5CAE9
+  database "PostgreSQL\ncon volumen pg_data" as db #FFECB3
+}
+
+' ==== Flujo de Despliegue ====
+
+dev --> repo
+note right of repo : \nPush de código
+
+repo --> workflow
+note right of workflow : \nTrigger CI/CD
+
+workflow --> dockerhub
+note right of dockerhub : Build & Push imágenes
+
+workflow --> digitalocean
+note right of digitalocean : Deploy vía SSH
+
+doppler --> workflow
+note top of workflow : Inyecta secretos
+
+doppler --> digitalocean
+note left of digitalocean : Variables de entorno
+
+
+' ==== Flujo de Uso ====
+
+end_users --> front
+note top of front : HTTP/HTTPS requests
+
+front --> back
+note top of back : API REST
+
+back --> db
+note top of db : JDBC
+
+@enduml

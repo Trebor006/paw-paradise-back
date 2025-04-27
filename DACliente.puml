@@ -1,0 +1,27 @@
+@startuml
+title 6.4.5 Diseño de Actividad - Registro de Cliente (Paw Paradise)
+
+|Administrador|
+start
+:Inicia sesión en el backoffice;
+:Accede al módulo de clientes;
+:Selecciona opción "Registrar Cliente";
+
+|Sistema|
+:Muestra formulario de registro;
+
+|Administrador|
+:Ingresa datos del cliente;
+:Adjunta imagen (opcional);
+:Confirma el registro;
+
+|Sistema|
+:Valida datos ingresados;
+:Guarda cliente en la base de datos;
+:Devuelve mensaje de confirmación;
+
+|Administrador|
+:Visualiza listado de clientes;
+
+stop
+@enduml
