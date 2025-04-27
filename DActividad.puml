@@ -1,0 +1,32 @@
+@startuml
+title 6.4.5 Diseño de Actividad - Gestión de Reservas y Mascotas (Paw Paradise)
+
+|Administrador|
+start
+:Inicia sesión en el backoffice;
+:Accede al módulo de gestión;
+
+|Sistema|
+:Carga datos de reservas y mascotas;
+
+|Administrador|
+:Visualiza reservas pendientes;
+
+if (¿Desea modificar reserva?) then (Sí)
+  :Modifica fecha u hora;
+endif
+
+:Confirma reserva;
+
+|Sistema|
+:Actualiza estado de reserva;
+:Genera factura del servicio;
+
+|Administrador|
+:Visualiza información de mascota;
+:Dirige proceso de check-in o check-out;
+
+stop
+@enduml
+
+

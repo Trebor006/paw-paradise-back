@@ -1,0 +1,82 @@
+@startuml
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor Black
+}
+skinparam node {
+  BackgroundColor #F2F2F2
+  BorderColor Black
+}
+skinparam artifact {
+  BackgroundColor #FFF2CC
+  BorderColor Black
+}
+skinparam component {
+  BackgroundColor #CCE5FF
+  BorderColor Black
+}
+
+title Diagrama de Despliegue - Paw Paradise (DigitalOcean + GitHub Actions + Doppler)
+
+actor Cliente as user
+node "Navegador Web\n(HTTPS)" as navegador
+cloud "Internet" as internet
+
+user --> navegador
+navegador --> internet
+
+' Nodo CI/CD
+node "GitHub Actions\n(Workflow CI/CD)" as github
+artifact "Workflow YAML" as yaml
+node "Secrets\n(GitHub Env Vars)" as secrets
+
+' Doppler como gestor externo de secretos
+node "Doppler" as doppler <<Cloud>> {
+    node "Doppler Config\n(Env Vars / Secrets)" as doppler_config #D5F5E3
+}
+
+' DockerHub como repositorio de imágenes
+node "DockerHub" as dockerhub <<Cloud>> #DAE8FC {
+    node "Repositorio de Imágenes" as docker_repo #B0E3E6
+}
+
+' Nodo principal de ejecución
+node "DigitalOcean\nInfraestructura Principal" as digitalocean <<Cloud>> #DAE8FC {
+
+    node "paw-paradise-front-app\nReact (Docker)" as front #B0E3E6
+    component "App React\nPuerto 8080" as react
+
+    node "paw-paradise-backend-app\nSpring Boot (Docker)" as back #B0E3E6
+    component "API REST\nPuerto 8081" as spring
+
+    node "PostgreSQL DB\ndb-postgresql-paw-paradise" as db #B1DDF0
+    artifact "Volumen Persistente:\npg_data" as vol
+}
+
+' Relaciones lógicas internas
+digitalocean --> front
+digitalocean --> back
+digitalocean --> db
+
+front --> react
+back --> spring
+db --> vol
+
+' Flujo de la app
+internet --> react : Solicita SPA
+react --> spring : Peticiones API
+spring --> db : JDBC
+
+' CI/CD y secretos
+github --> yaml
+github --> secrets
+github --> dockerhub : Push/Pull de imágenes
+github --> digitalocean : Despliegue CI/CD
+
+secrets --> digitalocean : Variables de entorno
+doppler_config --> secrets : Sync secreto CI/CD
+doppler_config --> digitalocean : Variables en ejecución
+
+@enduml
+
+

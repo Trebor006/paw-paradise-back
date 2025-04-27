@@ -1,0 +1,28 @@
+@startuml
+title 6.4.5 Diseño de Actividad - Registro de Mascota (Paw Paradise)
+
+|Administrador|
+start
+:Inicia sesión en el backoffice;
+:Accede al módulo de mascotas;
+:Selecciona opción "Registrar Mascota";
+
+|Sistema|
+:Muestra formulario de registro de mascota;
+
+|Administrador|
+:Ingresa datos de la mascota;
+:Selecciona cliente asociado;
+:Adjunta foto (opcional);
+:Confirma el registro;
+
+|Sistema|
+:Valida datos ingresados;
+:Guarda mascota en la base de datos;
+:Devuelve mensaje de confirmación;
+
+|Administrador|
+:Visualiza listado de mascotas;
+
+stop
+@enduml

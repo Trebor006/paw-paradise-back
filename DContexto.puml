@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor white
+skinparam rectangle {
+  BackgroundColor #DAE8FC
+  BorderColor Black
+}
+skinparam database {
+  BackgroundColor #B0E3E6
+  BorderColor Black
+}
+skinparam actor {
+  BackgroundColor #E1D5E7
+  BorderColor Black
+}
+
+title Diagrama de Contexto - Sistema Paw Paradise
+
+actor "Cliente\n(Frontend Web/App)" as cliente
+actor "Staff\n(Backoffice Web)" as staff
+actor "GitHub Actions" as github
+actor "Doppler" as doppler
+actor "DockerHub" as dockerhub
+actor "Pasarela de Pagos" as pagos
+
+rectangle "Sistema de Gestión de\nReservas y Hospedaje de Mascotas" as sistema
+
+database "PostgreSQL\nBase de Datos" as db
+
+' Relaciones
+cliente --> sistema : Solicita reservas,\npagos, monitoreo
+staff --> sistema : Gestión de mascotas,\nreservas, facturas
+github --> sistema : CI/CD - Despliegue
+doppler --> sistema : Inyección de secretos
+dockerhub --> sistema : Pull de imágenes
+pagos --> sistema : Notificaciones\n(transacción exitosa)
+sistema --> db : Acceso a datos
+
+@enduml
